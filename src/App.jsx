@@ -1,3 +1,4 @@
+import { supabase } from './lib/supabase'
 import { useEffect, useMemo, useState } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
@@ -11,6 +12,20 @@ import { CURRENT_MENTOR, mockStudents } from './data/mockStudents'
 import { addMeeting, loadMeetings } from './services/mentorService'
 
 function App() {
+  useEffect(() => {
+    async function testSupabaseConnection() {
+      const { error } = await supabase.auth.getSession()
+
+      if (error) {
+        console.error('Supabase connection test failed:', error.message)
+      } else {
+        console.log('Supabase connection successful!')
+      }
+    }
+
+    testSupabaseConnection()
+  }, [])
+
   const students = useMemo(
     () => mockStudents.filter((student) => student.mentor_id === CURRENT_MENTOR.id),
     [],
